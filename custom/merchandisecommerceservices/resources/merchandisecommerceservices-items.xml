@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2013 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+
+  
+-->
+<!--
+	ATTENTION: This is just an example file. You have to edit it according to your needs.
+-->
+
+<items 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			xsi:noNamespaceSchemaLocation="items.xsd">
+    <itemtypes>
+        <itemtype code="ProductQuantityThresholdFreeGiftPromotion"
+            extends="ProductPromotion"
+            jaloclass="de.hybris.merchandise.jalo.ProductQuantityThresholdFreeGiftPromotion"
+            autocreate="true"
+            generate="true">
+ 
+            <attributes>
+ 
+                <attribute
+                    qualifier="giftProduct"
+                    autocreate="true"
+                    type="Product">
+                    <description>The partner product.</description>
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+ 
+                <attribute
+                    qualifier="qualifyingCount"
+                    autocreate="true"
+                    type="java.lang.Integer">
+                    <defaultvalue>Integer.valueOf(3)</defaultvalue>
+                    <description>The number of base products required to qualify for the free gift.</description>
+                    <modifiers read="true" write="true" search="true" optional="true"/>
+                    <persistence type="property"/>
+                </attribute>
+ 
+                <attribute qualifier="messageFired" type="localized:java.lang.String">
+                    <description>The message to show when the promotion has fired.</description>
+                    <modifiers read="true" write="true" optional="true" />
+                    <persistence type="property">
+                        <columntype database="oracle">
+                            <value>varchar2(4000)</value>
+                        </columntype>
+                        <columntype database="mysql">
+                            <value>text</value>
+                        </columntype>
+                        <columntype database="sqlserver">
+                            <value>nvarchar(max)</value>
+                        </columntype>
+                        <columntype database="hsqldb">
+                            <value>LONGVARCHAR</value>
+                        </columntype>
+                        <columntype>
+                            <value>varchar</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+ 
+                <attribute qualifier="messageCouldHaveFired" type="localized:java.lang.String">
+                    <description>The message to show when the promotion could have potentially fire.</description>
+                    <modifiers read="true" write="true" optional="true" />
+                    <persistence type="property">
+                        <columntype database="oracle">
+                            <value>varchar2(4000)</value>
+                        </columntype>
+                        <columntype database="mysql">
+                            <value>text</value>
+                        </columntype>
+                        <columntype database="sqlserver">
+                            <value>nvarchar(max)</value>
+                        </columntype>
+                        <columntype database="hsqldb">
+                            <value>LONGVARCHAR</value>
+                        </columntype>
+                        <columntype>
+                            <value>varchar</value>
+                        </columntype>
+                    </persistence>
+                </attribute>
+ 
+            </attributes>
+        </itemtype>
+    </itemtypes>
+</items>

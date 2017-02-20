@@ -1,0 +1,11 @@
+#Ant properties
+#Thu Aug 13 18:42:59 CEST 2015
+builddate=20150813 1842
+description=merchandisecheckoutaddon
+group.id=de.hybris.platform
+module.name=platform-module
+name=merchandisecheckoutaddon
+releasedate=20150804 1509
+vendor=hybris
+version=5.7.0.0-SNAPSHOT
+version.api=5.7.0

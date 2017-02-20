@@ -1,0 +1,10 @@
+#Ant properties
+#Tue Sep 15 14:44:46 CEST 2015
+builddate=20150915 1444
+description=merchandisecommerceservices
+group.id=de.hybris.platform
+module.name=platform-module
+name=merchandisecommerceservices
+vendor=hybris
+version=5.7.0.0-SNAPSHOT
+version.api=5.7.0

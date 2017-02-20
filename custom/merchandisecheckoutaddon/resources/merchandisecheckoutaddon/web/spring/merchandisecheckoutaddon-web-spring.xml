@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ [y] hybris Platform
+
+ Copyright (c) 2000-2015 hybris AG
+ All rights reserved.
+
+ This software is the confidential and proprietary information of hybris
+ ("Confidential Information"). You shall not disclose such Confidential
+ Information and shall use it only in accordance with the terms of the
+ license agreement you entered into with hybris.
+-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config/>
+
+    <context:component-scan base-package="de.hybris.platform.addons.merchandisecheckoutaddon.controllers" scope-resolver="de.hybris.platform.spring.IgnoreTenantScopeMetadataResolver"/>
+
+
+	<!-- Expose /acceleratoraddon/web/webroot/WEB-INF/messages/base.js.properties  resource bundle as javascript variables -->
+	<bean id="defaultMerchandisecheckoutaddonJavaScriptMessageResourceAccessor" parent="abstractJavaScriptMessageResourceAccessor">
+		<property name="addOnName" value="merchandisecheckoutaddon"/>
+	</bean>
+
+	<bean id="defaultMerchandisecheckoutaddonBeforeViewJsPropsHandlerAdaptee" parent="abstractBeforeViewJsPropsHandlerAdaptee" class="de.hybris.platform.addonsupport.interceptors.ExportJsPropertiesBeforeViewHandler">
+		<property name="messageSource" ref="defaultMerchandisecheckoutaddonJavaScriptMessageResourceAccessor"/>
+	</bean>
+
+	<bean id="getMerchandisecheckoutaddonBeforeViewHandler" parent="beforeViewHandlerAdapter">
+		<property name="adaptee">
+			<ref bean="defaultMerchandisecheckoutaddonBeforeViewJsPropsHandlerAdaptee"/>
+		</property>
+	</bean>
+	<bean id="MerchandisecheckoutaddonBeforeViewHandlerListMergeDirective" depends-on="beforeViewHandlersList" parent="listMergeDirective">
+		<property name="add" ref="getMerchandisecheckoutaddonBeforeViewHandler"/>
+	</bean>
+	
+	<alias name="merchandiseMultiFlowCheckoutGroup" alias="merchandiseMultiFlowCheckoutGroup" />
+    <bean id="merchandiseMultiFlowCheckoutGroup"  class="de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutGroup">
+	    <property name="groupId"  value="merchandiseMultiFlowCheckoutGroup"/>
+	    <property name="checkoutStepMap">
+	        <map merge="true">
+	            <entry key="multi" value-ref="multiStepCheckout"/>
+	            <entry key="delivery-address" value-ref="deliveryAddressCheckoutStep"/>
+	            <entry key="delivery-method" value-ref="deliveryMethodForMerchandiseMultiFlow"/>
+	            <entry key="pickup-location" value-ref="pickupLocationCheckoutStep"/>
+	            <entry key="gift-wrap" value-ref="giftWrapCheckoutStepForMultiFlow"/>
+	            <entry key="payment-method" value-ref="paymentMethodCheckoutStep"/>
+	            <entry key="summary" value-ref="summaryCheckoutStep"/>
+	        </map>
+	    </property>
+	    <property name="validationResultsMap">
+	        <map merge="true">
+	            <entry key="FAILED" value-ref="REDIRECT_TO_CART"/>
+	            <entry key="REDIRECT_TO_DELIVERY_ADDRESS" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/>
+	            <entry key="REDIRECT_TO_PICKUP_LOCATION" value-ref="REDIRECT_TO_PICKUP_LOCATION"/>
+	            <entry key="REDIRECT_TO_CART" value-ref="REDIRECT_TO_CART"/>
+	            <entry key="REDIRECT_TO_PAYMENT_METHOD" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+	            <entry key="REDIRECT_TO_DELIVERY_METHOD" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+	        </map>
+	    </property>
+	    <property name="checkoutProgressBar">
+	        <map merge="true">
+	            <entry key="1" value-ref="deliveryAddressCheckoutStep"/>
+	            <entry key="2" value-ref="deliveryMethodForMerchandiseMultiFlow"/>
+	            <entry key="3" value-ref="giftWrapCheckoutStepForMultiFlow"/>
+	            <entry key="4" value-ref="paymentMethodCheckoutStep"/>
+	            <entry key="5" value-ref="defaultSummaryCheckoutStep"/>
+	        </map>
+	    </property>
+    </bean>
+    
+	<alias name="defaultGiftWrapCheckoutStepAddon" alias="giftWrapCheckoutStepForMultiFlow" />
+	<bean id="defaultGiftWrapCheckoutStepAddon" parent="checkoutStep">
+	    <property name="checkoutGroup" ref="merchandiseMultiFlowCheckoutGroup"/>
+	    <property name="transitions">
+	        <map merge="true">
+	            <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+	            <entry key="current" value-ref="REDIRECT_TO_GIFT_WRAP"/>
+	            <entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+	        </map>
+	    </property>
+	    <property name="progressBarId" value="giftWrap"/>
+	</bean>
+	 
+	<bean id="REDIRECT_TO_GIFT_WRAP" class="java.lang.String">
+	    <constructor-arg value="redirect:/checkout/multi/addon/gift-wrap"/>
+	</bean>
+	
+	<alias name="deliveryMethodForMerchandiseMultiFlow" alias="deliveryMethodForMerchandiseMultiFlow"/>
+	<bean id="deliveryMethodForMerchandiseMultiFlow" parent="checkoutStep">
+	    <property name="checkoutGroup" ref="merchandiseMultiFlowCheckoutGroup"/>
+	    <property name="checkoutStepValidator" ref="deliveryMethodCheckoutValidator"/>
+	    <property name="transitions">
+	        <map merge="true">
+	            <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/>
+	            <entry key="current" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+	            <entry key="next" value-ref="REDIRECT_TO_GIFT_WRAP"/>
+	        </map>
+	    </property>
+	    <property name="progressBarId" value="deliveryMethod"/>
+	</bean>
+	
+	<util:map id="checkoutFlowGroupMap">
+	    <entry key="merchandiseMultiFlowCheckoutGroup"  value-ref="merchandiseMultiFlowCheckoutGroup"/>
+	    <entry key="merchandiseMultiPathCheckoutGroup"  value-ref="merchandiseMultiPathCheckoutGroup"/>
+	</util:map>
+	
+    <!---Merchandise multi path checkout-->
+    <alias name="merchandiseMultiPathCheckoutGroup" alias="merchandiseMultiPathCheckoutGroup" />
+    <bean id="merchandiseMultiPathCheckoutGroup"  class="de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutGroup">
+        <property name="groupId"  value="merchandiseMultiPathCheckoutGroup"/>
+        <property name="checkoutStepMap">
+            <map merge="true">
+                <entry key="multi" value-ref="multiStepCheckout"/>
+                <entry key="delivery-address" value-ref="deliveryAddressMultiPathCheckoutStep"/>
+                <entry key="delivery-method" value-ref="deliveryMethodMultiPathCheckoutStep"/>
+                <entry key="gift-wrap" value-ref="giftWrapMultiPathCheckoutStep"/>
+                <entry key="pickup-location" value-ref="pickupLocationCheckoutStep"/>
+                <entry key="payment-method" value-ref="paymentMethodCheckoutStep"/>
+                <entry key="summary" value-ref="summaryCheckoutStep"/>
+            </map>
+        </property>
+        <property name="validationResultsMap">
+            <map merge="true">
+                <entry key="FAILED" value-ref="REDIRECT_TO_CART"/>
+                <entry key="REDIRECT_TO_DELIVERY_ADDRESS" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/>
+                <entry key="REDIRECT_TO_PICKUP_LOCATION" value-ref="REDIRECT_TO_PICKUP_LOCATION"/>
+                <entry key="REDIRECT_TO_CART" value-ref="REDIRECT_TO_CART"/>
+                <entry key="REDIRECT_TO_PAYMENT_METHOD" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+                <entry key="REDIRECT_TO_DELIVERY_METHOD" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+                <entry key="REDIRECT_TO_DUMMY_STEP" value-ref="REDIRECT_TO_GIFT_WRAP"/>
+            </map>
+        </property>
+        <property name="checkoutProgressBar">
+            <map merge="true">
+                <entry key="1" value-ref="deliveryAddressMultiPathCheckoutStep"/>
+                <entry key="2" value-ref="deliveryMethodMultiPathCheckoutStep"/>
+                <entry key="3" value-ref="paymentMethodCheckoutStep"/>
+                <entry key="4" value-ref="defaultSummaryCheckoutStep"/>
+            </map>
+        </property>
+    </bean>
+    
+    <alias name="deliveryAddressMultiPathCheckoutStep" alias="deliveryAddressMultiPathCheckoutStep"/>
+    <bean id="deliveryAddressMultiPathCheckoutStep" parent="deliveryAddressCheckoutStep">
+        <property name="transitions">
+            <map merge="true">
+                <entry key="next" value-ref="REDIRECT_TO_MULTIPATH_DELIVERY_METHOD"/>
+            </map>
+        </property>
+        <property name="progressBarId" value="deliveryAddress"/>
+    </bean>
+    
+    <alias name="deliveryMethodMultiPathCheckoutStep" alias="deliveryMethodMultiPathCheckoutStep"/>
+    <bean id="deliveryMethodMultiPathCheckoutStep" parent="checkoutStep">
+        <property name="checkoutGroup" ref="merchandiseMultiPathCheckoutGroup"/>
+        <property name="checkoutStepValidator" ref="deliveryMethodCheckoutStepAddonValidator"/>
+        <property name="transitions">
+            <map merge="true">
+                <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_ADDRESS"/>
+                <entry key="current" value-ref="REDIRECT_TO_MULTIPATH_DELIVERY_METHOD"/>
+                <entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+            </map>
+        </property>
+        <property name="progressBarId" value="deliveryMethod"/>
+    </bean>
+    
+	<bean id="deliveryMethodCheckoutStepAddonValidator" class="de.hybris.platform.addons.merchandisecheckoutaddon.validator.DeliveryMethodAddonCheckoutStepValidator"
+	      parent="abstractCheckoutStepValidator">
+	    <property name="sessionService" ref="sessionService"/>
+	</bean>
+	 
+	<bean id="REDIRECT_TO_MULTIPATH_DELIVERY_METHOD" class="java.lang.String">
+	    <constructor-arg value="redirect:/checkout/multi/addon/delivery-method/choose"/>
+	</bean>
+	
+    <alias name="giftWrapMultiPathCheckoutStep" alias="giftWrapMultiPathCheckoutStep"/>
+    <bean id="giftWrapMultiPathCheckoutStep" parent="checkoutStep">
+        <property name="checkoutGroup" ref="merchandiseMultiPathCheckoutGroup"/>
+        <property name="transitions">
+            <map merge="true">
+                <entry key="previous" value-ref="REDIRECT_TO_MULTIPATH_DELIVERY_METHOD"/>
+                <entry key="current" value-ref="REDIRECT_TO_GIFT_WRAP"/>
+                <entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+            </map>
+        </property>
+        <property name="progressBarId" value="deliveryMethod"/>
+    </bean>
+
+</beans>

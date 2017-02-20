@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<content-editor hideEmpty="true" hideReadOnly="true" groupCollections="false">
+  <template>
+    <![CDATA[
+        <table width="100%" style="margin:0px;padding:0px">
+            <tbody>
+                <tr>
+                    <td colspan="2"><div style="height:6px"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><div class="contentEditorHeader" style="background-color:#C3C3C3;font-size:11px;padding:3px;"><b>$label</b></div></td>
+                </tr>
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="RandomImageParagraphComponent.width"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="RandomImageParagraphComponent.height"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="RandomImageParagraphComponent.text"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>
+                <tr>
+                    <td style="width:900px"><cockpit code="property" value="RandomImageParagraphComponent.topic"/></td>
+                    <td><div style="height:6px"/></td>
+                </tr>
+            </tbody>
+        </table>
+    ]]>
+  </template>
+</content-editor>

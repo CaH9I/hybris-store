@@ -1,0 +1,5 @@
+
+$storeUid=hybris
+  
+INSERT_UPDATE BaseStore2WarehouseRel;source(uid)[unique=true];target(code)[unique=true]
+;$storeUid;warehouse_c
