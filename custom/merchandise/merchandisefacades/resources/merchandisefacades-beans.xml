@@ -20,4 +20,18 @@
 		<property name="code" type="String"/>
 		<property name="name" type="String"/>
 	</bean>
+	
+    <bean class="de.hybris.platform.commercefacades.user.data.CustomerData">
+        <property name="numberOfPoints" type="int"/>
+    </bean>
+
+    <bean class="de.hybris.merchandise.facades.order.data.LPPaymentInfoData">
+        <property name="numberOfPoints" type="int"/>
+        <property name="loyaltyCost" type="de.hybris.platform.commercefacades.product.data.PriceData"/>
+    </bean>
+
+    <bean class="de.hybris.platform.commercefacades.order.data.AbstractOrderData">
+        <property name="LPPaymentInfo" type="de.hybris.merchandise.facades.order.data.LPPaymentInfoData"/>
+    </bean>
+
 </beans>

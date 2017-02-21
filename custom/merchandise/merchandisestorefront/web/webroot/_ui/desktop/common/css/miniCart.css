@@ -8,7 +8,8 @@
 	z-index:200;
 }
 
-.miniCart > a .count{
+.miniCart > a .count,
+.lp-count{
 	background:#464646;
 	color:#fff;
 	width:20px;
@@ -16,6 +17,14 @@
 	font-size:0.833em;
 	display: inline-block;
 	text-align:center;
+}
+
+
+
+.lp-count{
+    width:auto;
+    padding:0 5px;
+    background:#1a618b;
 }
 
 .miniCart > a .price{

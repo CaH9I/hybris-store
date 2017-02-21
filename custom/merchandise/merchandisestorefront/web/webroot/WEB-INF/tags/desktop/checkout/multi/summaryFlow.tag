@@ -6,13 +6,31 @@
 <%@ attribute name="cartData" required="false" type="de.hybris.platform.commercefacades.order.data.CartData" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="multi-checkout" tagdir="/WEB-INF/tags/desktop/checkout/multi" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
 <div id="checkoutContentPanel" class="clearfix summaryFlow">
-	<div class="headline"><spring:theme code="checkout.summary.reviewYourOrder" /></div>
-	<multi-checkout:summaryFlowDeliveryAddress deliveryAddress="${deliveryAddress}" />
-	<hr>
-	<multi-checkout:summaryFlowDeliveryMode deliveryMode="${deliveryMode}" cartData="${cartData}" />
-	<hr>
-	<multi-checkout:summaryFlowPayment paymentInfo="${paymentInfo}" requestSecurityCode="${requestSecurityCode}"/>
+    <div class="headline"><spring:theme code="checkout.summary.reviewYourOrder" /></div>
+    <multi-checkout:summaryFlowDeliveryAddress deliveryAddress="${deliveryAddress}" />
+    <hr>
+    <multi-checkout:summaryFlowDeliveryMode deliveryMode="${deliveryMode}" cartData="${cartData}" />
+    <c:if test="${not empty cartData.LPPaymentInfo}">
+        <hr>
+        <div class="summaryPayment clearfix">
+            <div class="column append-1">
+                <strong><spring:theme code="checkout.summary.loyaltyPoints.header"/></strong>
+                <ul>
+                    <li><spring:theme code="checkout.summary.loyaltyPoints.numberOfPoints"/>: 
+                        ${cartData.LPPaymentInfo.numberOfPoints}
+                    </li>
+                    <li><spring:theme code="checkout.summary.loyaltyPoints.loyaltyCost"/>:
+                        ${cartData.LPPaymentInfo.loyaltyCost.formattedValue}
+                    </li>
+                </ul>
+            </div>
+            <a href="<c:url value="/checkout/multi/loyalty-points"/>" class="button positive editButton"><spring:theme code="checkout.summary.edit"/></a>      
+        </div>
+    </c:if>
+    <hr>
+    <multi-checkout:summaryFlowPayment paymentInfo="${paymentInfo}" requestSecurityCode="${requestSecurityCode}"/>
 </div>

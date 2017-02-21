@@ -13,7 +13,9 @@
  */
 package de.hybris.merchandise.storefront.controllers.pages.checkout.steps;
 
+import static de.hybris.merchandise.storefront.controllers.pages.checkout.steps.LoyaltyPointsCheckoutStepController.LOYALTY_POINTS;
 
+import de.hybris.merchandise.storefront.controllers.ControllerConstants;
 import de.hybris.platform.acceleratorservices.enums.CheckoutPciOptionEnum;
 import de.hybris.platform.acceleratorservices.payment.constants.PaymentConstants;
 import de.hybris.platform.acceleratorservices.payment.data.PaymentData;
@@ -33,7 +35,6 @@ import de.hybris.platform.commercefacades.order.data.CardTypeData;
 import de.hybris.platform.commercefacades.order.data.CartData;
 import de.hybris.platform.commercefacades.user.data.AddressData;
 import de.hybris.platform.commercefacades.user.data.CountryData;
-import de.hybris.merchandise.storefront.controllers.ControllerConstants;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -317,6 +318,10 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 	@Override
 	public String back(final RedirectAttributes redirectAttributes)
 	{
+		if (Boolean.TRUE.equals(getSessionService().getAttribute("use_lp")))
+		{
+			return getCheckoutStep(LOYALTY_POINTS).currentStep();
+		}
 		return getCheckoutStep().previousStep();
 	}
 
@@ -391,8 +396,8 @@ public class PaymentMethodCheckoutStepController extends AbstractCheckoutStepCon
 			// Add credit cards for all supported cards that have mappings for cybersource SOP
 			if (CYBERSOURCE_SOP_CARD_TYPES.containsKey(supportedCardType.getCode()))
 			{
-				sopCardTypes.add(createCardTypeData(CYBERSOURCE_SOP_CARD_TYPES.get(supportedCardType.getCode()),
-						supportedCardType.getName()));
+				sopCardTypes.add(
+						createCardTypeData(CYBERSOURCE_SOP_CARD_TYPES.get(supportedCardType.getCode()), supportedCardType.getName()));
 			}
 		}
 		return sopCardTypes;

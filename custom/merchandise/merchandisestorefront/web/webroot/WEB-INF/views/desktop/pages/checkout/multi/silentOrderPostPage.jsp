@@ -103,7 +103,7 @@
 
 
 					<div class="form-actions">
-						<c:url value="/checkout/multi/delivery-method/choose" var="chooseDeliveryMethodUrl"/>
+						<c:url value="/checkout/multi/payment-method/back" var="chooseDeliveryMethodUrl"/>
 						<a class="button" href="${chooseDeliveryMethodUrl}"><spring:theme code="checkout.multi.cancel" text="Cancel"/></a>
 						<button class="positive right submit_silentOrderPostForm" tabindex="20">
 							<spring:theme code="checkout.multi.paymentMethod.continue" text="Continue"/>

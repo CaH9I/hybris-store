@@ -13,6 +13,8 @@
  */
 package de.hybris.merchandise.storefront.controllers.pages.checkout.steps;
 
+import de.hybris.merchandise.facades.loyalty.LoyaltyFacade;
+import de.hybris.merchandise.storefront.controllers.ControllerConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.PreValidateCheckoutStep;
 import de.hybris.platform.acceleratorstorefrontcommons.annotations.RequireHardLogIn;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.CheckoutStep;
@@ -20,9 +22,9 @@ import de.hybris.platform.acceleratorstorefrontcommons.constants.WebConstants;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.pages.checkout.steps.AbstractCheckoutStepController;
 import de.hybris.platform.cms2.exceptions.CMSItemNotFoundException;
 import de.hybris.platform.commercefacades.order.data.CartData;
-import de.hybris.merchandise.storefront.controllers.ControllerConstants;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepController
 {
 	private final static String DELIVERY_METHOD = "delivery-method";
+
+	@Autowired
+	private LoyaltyFacade loyaltyFacade;
 
 	@RequestMapping(value = "/choose", method = RequestMethod.GET)
 	@RequireHardLogIn
@@ -70,12 +75,20 @@ public class DeliveryMethodCheckoutStepController extends AbstractCheckoutStepCo
 	 */
 	@RequestMapping(value = "/select", method = RequestMethod.GET)
 	@RequireHardLogIn
-	public String doSelectDeliveryMode(@RequestParam("delivery_method") final String selectedDeliveryMethod)
+	public String doSelectDeliveryMode(@RequestParam("delivery_method") final String selectedDeliveryMethod,
+			@RequestParam("use_lp") final boolean useLoyaltyPoints)
 	{
 		if (StringUtils.isNotEmpty(selectedDeliveryMethod))
 		{
 			getCheckoutFacade().setDeliveryMode(selectedDeliveryMethod);
 		}
+
+		if (!useLoyaltyPoints)
+		{
+			loyaltyFacade.clearLPPaymentInfo();
+		}
+
+		getSessionService().setAttribute("use_lp", Boolean.valueOf(useLoyaltyPoints));
 
 		return getCheckoutStep().nextStep();
 	}

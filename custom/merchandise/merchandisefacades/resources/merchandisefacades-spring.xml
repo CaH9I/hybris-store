@@ -19,7 +19,8 @@
 		http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd">
 		
-	<context:annotation-config/> 
+	<context:annotation-config/>
+	<context:component-scan base-package="de.hybris.merchandise.facades"/>
 
 	<alias alias="simpleSuggestionFacade" name="defaultSimpleSuggestionFacade"/>
 	<bean id="defaultSimpleSuggestionFacade" class="de.hybris.merchandise.facades.suggestion.impl.DefaultSimpleSuggestionFacade" >
@@ -186,4 +187,26 @@
 	</bean>
 
 	<bean id="genderData" class="de.hybris.merchandise.facades.product.data.GenderData" scope="prototype"/>
+
+    <bean id="merchandiseCustomerPopulator" class="de.hybris.merchandise.facades.populators.MerchandiseCustomerPopulator"/>
+    
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="customerConverter"/>
+        <property name="add"  ref="merchandiseCustomerPopulator"/>
+    </bean>
+    
+    <bean id="merchandiseCartPopulator" class="de.hybris.merchandise.facades.populators.MerchandiseCartPopulator"/>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="extendedCartConverter"/>
+        <property name="add"  ref="merchandiseCartPopulator"/>
+    </bean>
+
+    <bean id="merchandiseOrderPopulator" class="de.hybris.merchandise.facades.populators.MerchandiseOrderPopulator"/>
+
+    <bean parent="modifyPopulatorList">
+        <property name="list" ref="accOrderConverter"/>
+        <property name="add"  ref="merchandiseOrderPopulator"/>
+    </bean>
+
 </beans>

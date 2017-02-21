@@ -11,55 +11,68 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <template:page pageTitle="${pageTitle}">
-	<div id="globalMessages">
-		<common:globalMessages/>
-	</div>
-	<div class="span-24">
-		<cms:pageSlot position="TopContent" var="feature" element="div" class="span-24 top-content-slot cms_disp-img_slot">
-			<cms:component component="${feature}"/>
-		</cms:pageSlot>
-		<div>
-			<a href="${request.contextPath}" class="button positive right"><spring:theme code="checkout.orderConfirmation.continueShopping" /></a>
-		</div>
-		<div class="orderHead">
-			<ycommerce:testId code="orderConfirmation_yourOrderResults_text">
-				<div class="orderConfirmationMsg"><spring:theme code="checkout.orderConfirmation.thankYouForOrder" /></div>
-				<div><spring:theme code="checkout.orderConfirmation.copySentTo" arguments="${email}"/></div>
-			</ycommerce:testId>
-			<div><spring:theme code="text.account.order.orderNumber" text="Order number is {0}" arguments="${orderData.code}"/></div>
-			<div><spring:theme code="text.account.order.orderPlaced" text="Placed on {0}" arguments="${orderData.created}"/></div>
-			<c:if test="${not empty orderData.statusDisplay}">
-				<spring:theme code="text.account.order.status.display.${orderData.statusDisplay}" var="orderStatus"/>
-				<div><spring:theme code="text.account.order.orderStatus" text="The order is {0}" arguments="${orderStatus}"/></div>
-			</c:if>
-		</div>
-		<sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
-			<div class="span-24 delivery_stages-guest last">
-				<user:guestRegister actionNameKey="guest.register.submit"/>
-			</div>
-		</sec:authorize>
-		<div class="orderBoxes clearfix">
-			<order:deliveryAddressItem order="${orderData}"/>
-			<order:deliveryMethodItem order="${orderData}"/>
-			<order:paymentMethodItem order="${orderData}"/>
-		</div>
-		<c:forEach items="${orderData.deliveryOrderGroups}" var="orderGroup">
-			<order:orderDetailsItem order="${orderData}" orderGroup="${orderGroup}" />
-		</c:forEach>		
-		<c:forEach items="${orderData.pickupOrderGroups}" var="orderGroup">
-			<order:orderPickupDetailsItem order="${orderData}" orderGroup="${orderGroup}" />
-		</c:forEach>	
-		<div class="span-16">
-			<order:receivedPromotions order="${orderData}"/>
-		</div>
-		<div class="span-8 right last">
-			<order:orderTotalsItem order="${orderData}" containerCSS="positive"/>
-		</div>
-	</div>
-	<cms:pageSlot position="SideContent" var="feature" element="div" class="span-24 side-content-slot cms_disp-img_slot">
-		<cms:component component="${feature}"/>
-	</cms:pageSlot>
-	<div>
-		<a href="${request.contextPath}" class="button positive right"><spring:theme code="checkout.orderConfirmation.continueShopping" /></a>
-	</div>
+    <div id="globalMessages">
+        <common:globalMessages/>
+    </div>
+    <div class="span-24">
+        <cms:pageSlot position="TopContent" var="feature" element="div" class="span-24 top-content-slot cms_disp-img_slot">
+            <cms:component component="${feature}"/>
+        </cms:pageSlot>
+        <div>
+            <a href="${request.contextPath}" class="button positive right"><spring:theme code="checkout.orderConfirmation.continueShopping" /></a>
+        </div>
+        <div class="orderHead">
+            <ycommerce:testId code="orderConfirmation_yourOrderResults_text">
+                <div class="orderConfirmationMsg"><spring:theme code="checkout.orderConfirmation.thankYouForOrder" /></div>
+                <div><spring:theme code="checkout.orderConfirmation.copySentTo" arguments="${email}"/></div>
+            </ycommerce:testId>
+            <div><spring:theme code="text.account.order.orderNumber" text="Order number is {0}" arguments="${orderData.code}"/></div>
+            <div><spring:theme code="text.account.order.orderPlaced" text="Placed on {0}" arguments="${orderData.created}"/></div>
+            <c:if test="${not empty orderData.statusDisplay}">
+                <spring:theme code="text.account.order.status.display.${orderData.statusDisplay}" var="orderStatus"/>
+                <div><spring:theme code="text.account.order.orderStatus" text="The order is {0}" arguments="${orderStatus}"/></div>
+            </c:if>
+        </div>
+        <sec:authorize ifAnyGranted="ROLE_ANONYMOUS">
+            <div class="span-24 delivery_stages-guest last">
+                <user:guestRegister actionNameKey="guest.register.submit"/>
+            </div>
+        </sec:authorize>
+        <div class="orderBoxes clearfix">
+            <order:deliveryAddressItem order="${orderData}"/>
+            <order:deliveryMethodItem order="${orderData}"/>
+            <order:paymentMethodItem order="${orderData}"/>
+            <c:if test="${not empty orderData.LPPaymentInfo}">
+                <div class="orderBox delivery">
+                    <div class="headline"><spring:theme code="checkout.summary.loyaltyPoints.header"/></div>
+                    <ul>
+                        <li><spring:theme code="checkout.summary.loyaltyPoints.numberOfPoints"/>: 
+                            ${orderData.LPPaymentInfo.numberOfPoints}
+                        </li>
+                        <li><spring:theme code="checkout.summary.loyaltyPoints.loyaltyCost"/>:
+                            ${orderData.LPPaymentInfo.loyaltyCost.formattedValue}
+                        </li>
+                    </ul>
+                </div>
+            </c:if>
+        </div>
+        <c:forEach items="${orderData.deliveryOrderGroups}" var="orderGroup">
+            <order:orderDetailsItem order="${orderData}" orderGroup="${orderGroup}" />
+        </c:forEach>        
+        <c:forEach items="${orderData.pickupOrderGroups}" var="orderGroup">
+            <order:orderPickupDetailsItem order="${orderData}" orderGroup="${orderGroup}" />
+        </c:forEach>    
+        <div class="span-16">
+            <order:receivedPromotions order="${orderData}"/>
+        </div>
+        <div class="span-8 right last">
+            <order:orderTotalsItem order="${orderData}" containerCSS="positive"/>
+        </div>
+    </div>
+    <cms:pageSlot position="SideContent" var="feature" element="div" class="span-24 side-content-slot cms_disp-img_slot">
+        <cms:component component="${feature}"/>
+    </cms:pageSlot>
+    <div>
+        <a href="${request.contextPath}" class="button positive right"><spring:theme code="checkout.orderConfirmation.continueShopping" /></a>
+    </div>
 </template:page>

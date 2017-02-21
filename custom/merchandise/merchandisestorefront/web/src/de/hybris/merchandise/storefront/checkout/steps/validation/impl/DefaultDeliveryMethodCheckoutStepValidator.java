@@ -13,15 +13,22 @@
  */
 package de.hybris.merchandise.storefront.checkout.steps.validation.impl;
 
+import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.AbstractCheckoutStepValidator;
 import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.ValidationResults;
 import de.hybris.platform.acceleratorstorefrontcommons.controllers.util.GlobalMessages;
-import de.hybris.platform.acceleratorstorefrontcommons.checkout.steps.validation.AbstractCheckoutStepValidator;
+import de.hybris.platform.servicelayer.session.SessionService;
+
+import javax.annotation.Resource;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 public class DefaultDeliveryMethodCheckoutStepValidator extends AbstractCheckoutStepValidator
 {
+
+	@Resource
+	private SessionService sessionService;
+
 	@Override
 	public ValidationResults validateOnEnter(final RedirectAttributes redirectAttributes)
 	{
@@ -49,6 +56,10 @@ public class DefaultDeliveryMethodCheckoutStepValidator extends AbstractCheckout
 	@Override
 	public ValidationResults validateOnExit()
 	{
+		if (Boolean.TRUE.equals(sessionService.getAttribute("use_lp")))
+		{
+			return ValidationResults.REDIRECT_TO_DUMMY_STEP;
+		}
 		if (getCheckoutFacade().hasPickUpItems())
 		{
 			return ValidationResults.REDIRECT_TO_PICKUP_LOCATION;

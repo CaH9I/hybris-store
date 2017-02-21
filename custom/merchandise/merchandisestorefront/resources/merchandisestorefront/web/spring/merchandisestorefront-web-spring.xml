@@ -1,0 +1,40 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <alias name="merchandiseMultiStepCheckoutGroup" alias="defaultCheckoutGroup"/>
+    <bean id="merchandiseMultiStepCheckoutGroup" parent="defaultMultiStepCheckoutGroup">
+        <property name="checkoutStepMap">
+            <map merge="true">
+                <entry key="loyalty-points" value-ref="loyaltyPointsCheckoutStep"/>
+            </map>
+        </property>
+        <property name="validationResultsMap">
+            <map merge="true">
+                <entry key="REDIRECT_TO_DUMMY_STEP" value-ref="REDIRECT_TO_LOYALTY_POINTS"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="loyaltyPointsCheckoutStep" parent="checkoutStep">
+        <property name="checkoutGroup" ref="merchandiseMultiStepCheckoutGroup"/>
+        <property name="transitions">
+            <map merge="true">
+                <entry key="previous" value-ref="REDIRECT_TO_DELIVERY_METHOD"/>
+                <entry key="current" value-ref="REDIRECT_TO_LOYALTY_POINTS"/>
+                <entry key="next" value-ref="REDIRECT_TO_PAYMENT_METHOD"/>
+            </map>
+        </property>
+        <property name="progressBarId" value="paymentMethod"/>
+    </bean>
+
+    <bean id="REDIRECT_TO_LOYALTY_POINTS" class="java.lang.String">
+        <constructor-arg value="redirect:/checkout/multi/loyalty-points"/>
+    </bean>
+
+</beans>

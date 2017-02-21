@@ -110,6 +110,7 @@ public interface ControllerConstants
 				String HostedOrderPostPage = "pages/checkout/multi/hostedOrderPostPage";
 				String SilentOrderPostPage = "pages/checkout/multi/silentOrderPostPage";
 				String GiftWrapPage = "pages/checkout/multi/giftWrapPage";
+				String LoyaltyPointsPage = "pages/checkout/multi/loyaltyPointsPage";
 			}
 
 			interface Password

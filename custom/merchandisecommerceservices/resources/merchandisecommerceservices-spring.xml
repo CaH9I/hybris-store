@@ -27,6 +27,8 @@
            
     <context:component-scan base-package="de.hybris.merchandise"/>
 
+    <tx:annotation-driven transaction-manager="txManager"/>
+
     <bean id="rangedAvgCustomerRatingProvider" class="de.hybris.merchandise.search.providers.MerchandiseProductReviewAverageRatingValueProvider" parent="productReviewAverageRatingValueProvider" />
     
     <bean id="productNameRangeProvider" class="de.hybris.merchandise.search.providers.ProductNameRangeProvider" parent="abstractPropertyFieldValueProvider">
@@ -41,5 +43,11 @@
         <property name="interceptor" ref="hybridCustomersPrepareInterceptor"/>
         <property name="typeCode" value="Customer"/>
     </bean>
+
+    <alias name="merchandiseCommercePlaceOrderStrategy" alias="commercePlaceOrderStrategy"/>
+    <bean id="merchandiseCommercePlaceOrderStrategy" class="de.hybris.merchandise.placeorder.impl.MerchandiseCommercePlaceOrderStrategy" parent="defaultCommercePlaceOrderStrategy"/>
+
+    <alias name="merchandizePaymentAuthorizationStrategy" alias="commercePaymentAuthorizationStrategy"/>
+    <bean id="merchandizePaymentAuthorizationStrategy" class="de.hybris.merchandise.order.impl.MerchandiseCommercePaymentAuthorizationStrategy" parent="defaultPaymentAuthorizationStrategy"/>
 
 </beans>

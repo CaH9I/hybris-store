@@ -18,6 +18,7 @@
 			extensions which are automatically required -->
 		<requires-extension name="acceleratorfacades"/>
 		<requires-extension name="merchandisecore"/>
+        <requires-extension name="merchandisecommerceservices"/>
 
 		<coremodule generated="true" manager="de.hybris.platform.jalo.extension.GenericManager" packageroot="de.hybris.merchandise.facades"/>
 

@@ -18,6 +18,7 @@
 <requires-extension name="btg"/>
 		<requires-extension name="acceleratorstorefrontcommons"/>
 		<requires-extension name="merchandisefacades"/>
+		<requires-extension name="merchandisecommerceservices"/>
 
 		<webmodule jspcompile="false" webroot="/store"/>
 			

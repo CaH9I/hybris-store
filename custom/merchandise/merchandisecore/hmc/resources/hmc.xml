@@ -14,21 +14,61 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="hybris.de/schemas/hmc/generic hmc.xsd">
 
+    <explorertree>
+        <group name="group.merchandisegroup">
+            <typeref type="LoyaltyConfig" description="typeref.loyaltyconfig.description"/>
+        </group>
+    </explorertree>
 
-	<!-- Configuration for extension merchandisecore -->
-
-	<type name="Consignment" mode="append">
-		<organizer>
-			<editor mode="append">
-				<tab name="properties" position="0" mode="append">
-					<section name="consignment.details">
-						<listlayout mode="append">
-							 <action type="item" classname="de.hybris.merchandise.core.hmc.PickupConfirmationHMCAction" name="btn.consignment.confirm.pickup"/>
-						</listlayout>
-					</section>
-				</tab>
-			</editor>
-		</organizer>
-	</type>
+    <type name="Consignment" mode="append">
+        <organizer>
+            <editor mode="append">
+                <tab name="properties" position="0" mode="append">
+                    <section name="consignment.details">
+                        <listlayout mode="append">
+                             <action type="item" classname="de.hybris.merchandise.core.hmc.PickupConfirmationHMCAction" name="btn.consignment.confirm.pickup"/>
+                        </listlayout>
+                    </section>
+                </tab>
+            </editor>
+        </organizer>
+    </type>
+    
+    <type name="LoyaltyConfig" mode="append">
+        <organizer>
+            <search mode="replace">
+                <condition attribute="chargePerEuro"/>
+                <condition attribute="maxTotalShare"/>
+                <condition attribute="euroConversion"/>
+            </search>
+            <result>
+                <listview mode="replace">
+                    <itemlayout>
+                        <attribute name="chargePerEuro"/>
+                        <attribute name="maxTotalShare"/>
+                        <attribute name="euroConversion"/>
+                    </itemlayout>
+                </listview>
+            </result>
+            <editor>
+                <essentials>
+                    <listlayout>
+                        <attribute name="chargePerEuro"/>
+                        <attribute name="maxTotalShare"/>
+                        <attribute name="euroConversion"/>
+                    </listlayout>
+                </essentials>
+                <tab name="tab.merchandise">
+                    <section name="section.merchandise">
+                        <listlayout>
+                            <attribute name="chargePerEuro"/>
+                            <attribute name="maxTotalShare"/>
+                            <attribute name="euroConversion"/>
+                        </listlayout>
+                    </section>
+                </tab>
+            </editor>
+        </organizer>
+    </type>
 	
 </configuration>
